@@ -314,6 +314,10 @@ public class DatasetSink extends AbstractSink implements Configurable {
         Preconditions.checkState(committed,
             "Tried to commit a batch when there was no transaction");
         committedBatch |= committed;
+      }else {//增加flume-dataset-sink对除Avro外的文件支持
+          boolean committed = commitTransaction();
+          Preconditions.checkState(committed, "Tried to commit when there was no transaction");
+          this.committedBatch |= committed;
       }
     } catch (Throwable th) {
       // catch-all for any unhandled Throwable so that the transaction is
